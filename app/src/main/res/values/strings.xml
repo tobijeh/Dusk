@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dusk</string>
+    <string name="tile_label">Dimmer</string>
+    <string name="dimmer_switch">Dimmer</string>
+    <string name="dim_level">Dim level: %1$d%%</string>
+    <string name="dim_cap_note">Android limits a touch-through overlay to %1$d%% on this phone, so the slider stops there.</string>
+    <string name="overlay_granted">Overlay permission granted</string>
+    <string name="grant_overlay">Grant overlay permission</string>
+    <string name="overlay_needed">Dusk needs \"Display over other apps\" to dim the screen.</string>
+    <string name="battery_settings">Battery optimization settings</string>
+    <string name="battery_hint">Set Dusk to \"Don\'t optimize\" (ColorOS: App info → Battery → Allow background activity) so the dimmer isn\'t killed.</string>
+    <string name="battery_ok">Battery optimization is off for Dusk.</string>
+    <string name="channel_name">Dimmer</string>
+    <string name="notif_title">Screen dimmed %1$d%%</string>
+    <string name="action_down">Dimmer −</string>
+    <string name="action_up">Dimmer +</string>
+    <string name="action_off">Off</string>
+</resources>
