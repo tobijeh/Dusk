@@ -20,7 +20,7 @@ Android 12 and later block touches from passing through another app's overlay wh
 Needs JDK 17+ (21 recommended) and the Android SDK with platform 37 (Android Studio installs it, or `sdkmanager "platforms;android-37.0" "build-tools;37.0.0"`).
 
 ```sh
-git clone https://github.com/tobijeh/Dusk.git && cd Dusk
+git clone https://github.com/tobijeh/dusk.git && cd dusk
 echo "sdk.dir=$HOME/Android/Sdk" > local.properties   # skip if ANDROID_HOME is set
 ./gradlew testDebugUnitTest lintDebug                # tests and lint
 ./gradlew assembleRelease                            # app/build/outputs/apk/release/app-release.apk
