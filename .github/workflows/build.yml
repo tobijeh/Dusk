@@ -19,10 +19,75 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v4
 
-      - name: Unit tests, lint, APKs
-        run: ./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease --no-daemon
+      - name: Unit tests, lint, debug APK
+        run: ./gradlew testDebugUnitTest lintDebug assembleDebug --no-daemon
 
-      - uses: actions/upload-artifact@v4
+  # Publishes a GitHub release with the APK, which Obtainium installs and updates from.
+  release:
+    needs: build-and-test
+    # Never publish from a branch or a pull request, even when started by hand.
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # create tags and releases
+    env:
+      VERSION: 1.0.${{ github.run_number }}
+      # SHA-256 of the release signing certificate. Not secret; it's how we check the right key was used.
+      EXPECTED_CERT: ba817188fd4c37d34011bbf16dc59d2f378059936ccb2c2d28a517495008a794
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
         with:
-          name: dusk-apk
-          path: app/build/outputs/apk/release/app-release.apk
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # Every release is signed with the same key so each APK installs over the last one.
+      - name: Restore signing key
+        env:
+          DUSK_KEYSTORE_BASE64: ${{ secrets.DUSK_KEYSTORE_BASE64 }}
+        run: |
+          if [ -z "$DUSK_KEYSTORE_BASE64" ]; then
+            echo "::error::DUSK_KEYSTORE_BASE64 secret is missing. Add it under Settings > Secrets and variables > Actions."
+            exit 1
+          fi
+          DUSK_KEYSTORE="$RUNNER_TEMP/dusk.p12"
+          echo "$DUSK_KEYSTORE_BASE64" | tr -d ' \r\n' | base64 -d > "$DUSK_KEYSTORE"
+          echo "DUSK_KEYSTORE=$DUSK_KEYSTORE" >> "$GITHUB_ENV"
+
+      - name: Build release APK
+        run: >
+          ./gradlew assembleRelease --no-daemon
+          -PversionCode=${{ github.run_number }}
+          -PversionName=$VERSION
+
+      - name: Check signing key
+        run: |
+          APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/apksigner | sort -V | tail -1)
+          CERT=$("$APKSIGNER" verify --print-certs app/build/outputs/apk/release/app-release.apk | sed -n 's/.*SHA-256 digest: //p' | head -1)
+          echo "Signed with $CERT"
+          if [ "$CERT" != "$EXPECTED_CERT" ]; then
+            echo "::error::APK is signed with the wrong key ($CERT). Check the DUSK_KEYSTORE_BASE64 secret."
+            exit 1
+          fi
+
+      - name: Rename APK
+        run: cp app/build/outputs/apk/release/app-release.apk "dusk-$VERSION.apk"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          TAG="v$VERSION"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            # Re-run of the same run number: replace the APK on the existing release.
+            gh release upload "$TAG" "dusk-$VERSION.apk" --clobber
+          else
+            gh release create "$TAG" "dusk-$VERSION.apk" \
+              --target "$GITHUB_SHA" \
+              --title "Dusk $VERSION" \
+              --notes "Built from ${GITHUB_SHA::7}: $(git log -1 --format=%s)" \
+              --latest
+          fi

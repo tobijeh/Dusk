@@ -26,17 +26,25 @@ echo "sdk.dir=$HOME/Android/Sdk" > local.properties   # skip if ANDROID_HOME is 
 ./gradlew assembleRelease                            # app/build/outputs/apk/release/app-release.apk
 ```
 
-Or download `dusk-apk` from the latest run on the Actions tab. CI signs with a fresh debug key each run, so a CI build won't install over a locally built one (or another CI run). Uninstall first if Android says the package conflicts.
+## Install and update with Obtainium
 
-## Install
+Every push to `main` builds a release (`v1.0.<run number>`) with `dusk-<version>.apk` attached, signed with the fixed Dusk key, so each one installs over the last.
 
-With USB debugging on:
+1. In Obtainium, tap **Add app** and paste `https://github.com/tobijeh/dusk`.
+2. The repo is private, so Obtainium needs a GitHub token: Settings → **GitHub** source → personal access token (fine-grained, this repo only, **Contents: Read-only**). Skip this if the repo is made public.
+3. Tap **Add**, then **Install**. Obtainium checks for new releases and offers updates.
+
+Locally built APKs are signed with your machine's debug key and won't install over a release (or the other way round) without uninstalling first.
+
+### Signing key
+
+The release job needs the `DUSK_KEYSTORE_BASE64` secret (Settings → Secrets and variables → Actions): the base64 of `dusk.p12` (PKCS12, alias `dusk`, password `android`). The job checks the APK's certificate against `EXPECTED_CERT` and refuses to publish with any other key. Keep a backup of `dusk.p12`: if it's lost, future releases can't update installed copies.
+
+## Install with adb
 
 ```sh
 adb install -r app/build/outputs/apk/release/app-release.apk
 ```
-
-Or copy the APK to the phone and open it (allow "Install unknown apps" for your file manager).
 
 ## First run
 
