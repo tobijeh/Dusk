@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Warm dusk palette, from the app icon. -->
+    <color name="dusk_background">#FFFAF5EF</color>
+    <color name="dusk_card">#FFFFFFFF</color>
+    <color name="dusk_chip">#FFEEE7DE</color>
+    <color name="dusk_icon">#FF2A2B36</color>
+    <color name="dusk_text">#FF1B1C2C</color>
+    <color name="dusk_text_secondary">#FF6E6A72</color>
+    <color name="dusk_accent">#FFEC7A52</color>
+    <color name="dusk_ok">#FF3E8E63</color>
+    <color name="dusk_track">#FFE5DCD1</color>
+</resources>

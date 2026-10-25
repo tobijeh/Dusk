@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dusk_background">#FF14151F</color>
+    <color name="dusk_card">#FF1F2030</color>
+    <color name="dusk_chip">#FF2C2D40</color>
+    <color name="dusk_icon">#FFEDE6DC</color>
+    <color name="dusk_text">#FFF4EEE6</color>
+    <color name="dusk_text_secondary">#FFA8A2AA</color>
+    <color name="dusk_accent">#FFF99A64</color>
+    <color name="dusk_ok">#FF7CC79D</color>
+    <color name="dusk_track">#FF34354A</color>
+</resources>

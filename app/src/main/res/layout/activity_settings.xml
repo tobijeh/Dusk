@@ -6,68 +6,257 @@
     <ScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="24dp">
+            android:paddingStart="20dp"
+            android:paddingTop="16dp"
+            android:paddingEnd="20dp"
+            android:paddingBottom="24dp">
 
-            <Switch
-                android:id="@+id/enabled"
+            <!-- Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="48dp"
-                android:text="@string/dimmer_switch"
-                android:textSize="18sp" />
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingStart="4dp"
+                android:paddingEnd="4dp">
+
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/dusk_logo" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:text="@string/app_name"
+                        android:textColor="@color/dusk_text"
+                        android:textSize="28sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tagline"
+                        android:textColor="@color/dusk_text_secondary"
+                        android:textSize="14sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Dimmer card -->
+            <LinearLayout
+                android:id="@+id/dimmer_card"
+                style="@style/Dusk.Card">
+
+                <LinearLayout
+                    android:id="@+id/enabled_row"
+                    style="@style/Dusk.Row"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingTop="16dp">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_dimmer" />
+
+                    <LinearLayout style="@style/Dusk.RowText">
+
+                        <TextView
+                            style="@style/Dusk.Title"
+                            android:text="@string/dimmer_switch" />
+
+                        <TextView
+                            android:id="@+id/enabled_status"
+                            style="@style/Dusk.Subtitle" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/enabled"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minHeight="48dp" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider" />
+
+                <LinearLayout
+                    style="@style/Dusk.Row"
+                    android:paddingBottom="4dp">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_brightness" />
+
+                    <TextView
+                        style="@style/Dusk.Title"
+                        android:layout_width="0dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:text="@string/dim_level_title" />
+
+                    <TextView
+                        android:id="@+id/level_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/dusk_accent"
+                        android:textSize="22sp" />
+                </LinearLayout>
+
+                <SeekBar
+                    android:id="@+id/level"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
+                    android:contentDescription="@string/dim_level_title"
+                    android:progressDrawable="@drawable/slider_track"
+                    android:splitTrack="false"
+                    android:thumb="@drawable/slider_thumb" />
+
+                <TextView
+                    android:id="@+id/cap_note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    android:textColor="@color/dusk_text_secondary"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="16dp" />
+            </LinearLayout>
+
+            <!-- Setup card -->
+            <TextView
+                style="@style/Dusk.Section"
+                android:text="@string/section_setup" />
+
+            <LinearLayout
+                android:id="@+id/setup_card"
+                style="@style/Dusk.Card">
+
+                <LinearLayout
+                    android:id="@+id/overlay_row"
+                    style="@style/Dusk.Row"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_eye" />
+
+                    <LinearLayout style="@style/Dusk.RowText">
+
+                        <TextView
+                            style="@style/Dusk.Title"
+                            android:text="@string/overlay_title" />
+
+                        <TextView
+                            android:id="@+id/overlay_status"
+                            style="@style/Dusk.Subtitle" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/overlay_trailing"
+                        style="@style/Dusk.Trailing"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider" />
+
+                <LinearLayout
+                    android:id="@+id/battery_row"
+                    style="@style/Dusk.Row"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_settings" />
+
+                    <LinearLayout style="@style/Dusk.RowText">
+
+                        <TextView
+                            style="@style/Dusk.Title"
+                            android:text="@string/battery_title" />
+
+                        <TextView
+                            android:id="@+id/battery_status"
+                            style="@style/Dusk.Subtitle" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/battery_trailing"
+                        style="@style/Dusk.Trailing"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider" />
+
+                <LinearLayout
+                    android:id="@+id/tile_row"
+                    style="@style/Dusk.Row"
+                    android:background="?android:attr/selectableItemBackground">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_night" />
+
+                    <LinearLayout style="@style/Dusk.RowText">
+
+                        <TextView
+                            style="@style/Dusk.Title"
+                            android:text="@string/tile_title" />
+
+                        <TextView
+                            android:id="@+id/tile_status"
+                            style="@style/Dusk.Subtitle" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/tile_trailing"
+                        style="@style/Dusk.Trailing"
+                        android:contentDescription="@null" />
+                </LinearLayout>
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/level_label"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:textSize="16sp" />
-
-            <SeekBar
-                android:id="@+id/level"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:minHeight="48dp" />
-
-            <TextView
-                android:id="@+id/cap_note"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/overlay_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="32dp" />
-
-            <Button
-                android:id="@+id/grant_overlay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/grant_overlay" />
-
-            <TextView
-                android:id="@+id/battery_status"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp" />
-
-            <Button
-                android:id="@+id/battery"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="@string/battery_settings" />
+                android:gravity="center"
+                android:text="@string/privacy_note"
+                android:textColor="@color/dusk_text_secondary"
+                android:textSize="12sp" />
         </LinearLayout>
     </ScrollView>
 

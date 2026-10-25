@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Themed icon (Android 13+): sun above the ridge, with a gap, then the hill. -->
+    <group>
+        <clip-path android:pathData="M0,71.5 C24,68.5 34,64 46.8,59.8 C57,56 64,52 76,51.7 C86,51.5 96,52.5 108,54 L108,0 L0,0 Z" />
+        <path android:fillColor="#FF000000" android:pathData="M31.5,56.3 a22.2,22.2 0 1,0 44.4,0 a22.2,22.2 0 1,0 -44.4,0 Z" />
+    </group>
+    <path android:fillColor="#FF000000" android:pathData="M0,75.5 C24,72.5 34,68 46.8,63.8 C57,60 64,56 76,55.7 C86,55.5 96,56.5 108,58 L108,90 L0,90 Z" />
+</vector>

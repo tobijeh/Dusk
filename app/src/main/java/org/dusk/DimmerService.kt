@@ -155,6 +155,8 @@ class DimmerService : Service() {
         return Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_dusk)
             .setContentTitle(getString(R.string.notif_title, prefs.level))
+            .setContentText(getString(R.string.notif_text))
+            .setColor(getColor(R.color.dusk_accent))
             .setContentIntent(open)
             .setOngoing(true)
             .setOnlyAlertOnce(true)

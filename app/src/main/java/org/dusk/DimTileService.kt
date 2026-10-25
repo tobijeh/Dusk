@@ -10,6 +10,16 @@ import android.service.quicksettings.TileService
 /** Quick Settings tile: tap toggles the dimmer, long-press opens [SettingsActivity]. */
 class DimTileService : TileService() {
 
+    override fun onTileAdded() {
+        super.onTileAdded()
+        DimPrefs(this).tileAdded = true
+    }
+
+    override fun onTileRemoved() {
+        super.onTileRemoved()
+        DimPrefs(this).tileAdded = false
+    }
+
     override fun onStartListening() {
         super.onStartListening()
         updateTile()

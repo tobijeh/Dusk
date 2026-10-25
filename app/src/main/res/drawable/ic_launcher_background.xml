@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Night sky with a warm glow around the sun. -->
+    <path android:pathData="M0,0 H108 V108 H0 Z">
+            <aapt:attr name="android:fillColor">
+                <gradient android:type="radial" android:centerX="53.7" android:centerY="56.3" android:gradientRadius="34">
+                    <item android:offset="0.6" android:color="#FF5C3236" />
+                    <item android:offset="0.72" android:color="#FF33212D" />
+                    <item android:offset="1" android:color="#FF1B1C2C" />
+                </gradient>
+            </aapt:attr>
+    </path>
+</vector>

@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="Theme.Dusk" parent="@android:style/Theme.Material" />
+    <style name="Theme.Dusk" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/dusk_background</item>
+        <item name="android:colorBackground">@color/dusk_background</item>
+        <item name="android:colorAccent">@color/dusk_accent</item>
+        <item name="android:colorControlActivated">@color/dusk_accent</item>
+        <item name="android:textColorPrimary">@color/dusk_text</item>
+        <item name="android:textColorSecondary">@color/dusk_text_secondary</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
 </resources>

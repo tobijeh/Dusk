@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dusk</string>
+    <string name="tagline">Dim below the system minimum</string>
     <string name="tile_label">Dimmer</string>
     <string name="dimmer_switch">Dimmer</string>
-    <string name="dim_level">Dim level: %1$d%%</string>
+    <string name="dimmer_on">On · dimmed %1$d%%</string>
+    <string name="dimmer_off">Off</string>
+    <string name="dimmer_needs_overlay">Allow \"Display over other apps\" first</string>
+    <string name="dim_level_title">Dim level</string>
+    <string name="dim_level_value">%1$d%%</string>
     <string name="dim_cap_note">Android limits a touch-through overlay to %1$d%% on this phone, so the slider stops there.</string>
-    <string name="overlay_granted">Overlay permission granted</string>
-    <string name="grant_overlay">Grant overlay permission</string>
-    <string name="overlay_needed">Dusk needs \"Display over other apps\" to dim the screen.</string>
-    <string name="battery_settings">Battery optimization settings</string>
-    <string name="battery_hint">Set Dusk to \"Don\'t optimize\" (ColorOS: App info → Battery → Allow background activity) so the dimmer isn\'t killed.</string>
-    <string name="battery_ok">Battery optimization is off for Dusk.</string>
+    <string name="section_setup">Setup</string>
+    <string name="overlay_title">Display over other apps</string>
+    <string name="overlay_granted">Allowed</string>
+    <string name="overlay_needed">Required to dim the screen. Tap to allow.</string>
+    <string name="battery_title">Battery optimization</string>
+    <string name="battery_ok">Off for Dusk, so it keeps running</string>
+    <string name="battery_hint">Set to \"Don\'t optimize\" so Dusk isn\'t stopped</string>
+    <string name="tile_title">Quick Settings tile</string>
+    <string name="tile_add">Tap to add the Dimmer tile</string>
+    <string name="tile_manual">Edit Quick Settings and drag in Dimmer</string>
+    <string name="tile_added">Added. Long-press it to open Dusk.</string>
+    <string name="privacy_note">No internet access · No ads · No tracking</string>
     <string name="channel_name">Dimmer</string>
     <string name="notif_title">Screen dimmed %1$d%%</string>
+    <string name="notif_text">Tap to adjust</string>
     <string name="action_down">Dimmer −</string>
     <string name="action_up">Dimmer +</string>
     <string name="action_off">Off</string>

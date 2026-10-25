@@ -27,8 +27,14 @@ class DimPrefs(context: Context) {
         get() = DimLevel.clamp(prefs.getInt(KEY_LEVEL, DEFAULT_LEVEL), maxLevel)
         set(value) = prefs.edit().putInt(KEY_LEVEL, DimLevel.clamp(value, maxLevel)).apply()
 
+    /** Whether the Quick Settings tile is in the panel (set by [DimTileService]). */
+    var tileAdded: Boolean
+        get() = prefs.getBoolean(KEY_TILE_ADDED, false)
+        set(value) = prefs.edit().putBoolean(KEY_TILE_ADDED, value).apply()
+
     companion object {
         const val KEY_ENABLED = "enabled"
+        const val KEY_TILE_ADDED = "tile_added"
         const val KEY_LEVEL = "level"
         const val DEFAULT_LEVEL = 50
     }

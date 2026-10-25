@@ -1,11 +1,17 @@
+<img src="docs/logo.png" width="96" alt="">
+
 # Dusk
 
 Dims the screen below the system minimum with a black overlay. Sideloaded; no ads, no analytics, no internet permission.
 
 - **Quick Settings tile** "Dimmer": tap to toggle, long-press for settings.
 - **Notification** (low priority, persistent while on): Dimmer −, Dimmer +, Off. Steps are 10%.
-- **Settings**: on/off switch, dim-level slider with live preview, overlay-permission button, battery-optimization button.
+- **Settings**: Dimmer switch and dim-level slider with live preview, then a setup checklist: overlay permission, battery optimization, and adding the Quick Settings tile (one tap on Android 13+). Light and dark themes.
 - Level and on/off state persist in SharedPreferences. If the system kills and restarts the service, it comes back at the saved level.
+
+## Icons
+
+The launcher icon (sun setting behind a hill) is an adaptive vector icon with a themed (monochrome) layer for Android 13+. The same art in one colour is the notification and tile icon (`ic_dusk`). Settings uses matching line icons (`ic_dimmer`, `ic_brightness`, `ic_eye`, `ic_settings`, `ic_night`). All are vectors in `app/src/main/res/drawable`.
 
 ## How it works
 
