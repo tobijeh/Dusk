@@ -32,8 +32,21 @@ class DimPrefs(context: Context) {
         get() = prefs.getBoolean(KEY_TILE_ADDED, false)
         set(value) = prefs.edit().putBoolean(KEY_TILE_ADDED, value).apply()
 
+    /** Whether the dimmer turns itself off at [autoOffMinute]. */
+    var autoOff: Boolean
+        get() = prefs.getBoolean(KEY_AUTO_OFF, false)
+        set(value) = prefs.edit().putBoolean(KEY_AUTO_OFF, value).apply()
+
+    /** Auto-off time as minutes after midnight. */
+    var autoOffMinute: Int
+        get() = prefs.getInt(KEY_AUTO_OFF_MINUTE, DEFAULT_AUTO_OFF_MINUTE).coerceIn(0, 24 * 60 - 1)
+        set(value) = prefs.edit().putInt(KEY_AUTO_OFF_MINUTE, value.coerceIn(0, 24 * 60 - 1)).apply()
+
     companion object {
         const val KEY_ENABLED = "enabled"
+        const val KEY_AUTO_OFF = "auto_off"
+        const val KEY_AUTO_OFF_MINUTE = "auto_off_minute"
+        const val DEFAULT_AUTO_OFF_MINUTE = 7 * 60
         const val KEY_TILE_ADDED = "tile_added"
         const val KEY_LEVEL = "level"
         const val DEFAULT_LEVEL = 50

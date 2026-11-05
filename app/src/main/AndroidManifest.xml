@@ -6,6 +6,11 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!-- Auto-off must fire on time. Android 13+ grants USE_EXACT_ALARM at install; 12 uses the older one. -->
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
+    <uses-permission
+        android:name="android.permission.SCHEDULE_EXACT_ALARM"
+        android:maxSdkVersion="32" />
 
     <application
         android:allowBackup="true"
@@ -46,6 +51,10 @@
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
                 android:value="Screen dimmer overlay that must stay on while the user wants the screen dimmed." />
         </service>
+
+        <receiver
+            android:name=".AutoOffReceiver"
+            android:exported="false" />
 
         <service
             android:name=".DimTileService"

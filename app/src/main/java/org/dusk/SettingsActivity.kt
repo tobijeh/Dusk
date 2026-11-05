@@ -3,6 +3,7 @@ package org.dusk
 import android.Manifest
 import android.app.Activity
 import android.app.StatusBarManager
+import android.app.TimePickerDialog
 import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Intent
@@ -14,6 +15,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.PowerManager
 import android.provider.Settings
+import android.text.format.DateFormat
 import android.view.View
 import android.view.WindowInsets
 import android.widget.ImageView
@@ -34,6 +36,8 @@ class SettingsActivity : Activity() {
     private lateinit var batteryTrailing: ImageView
     private lateinit var tileStatus: TextView
     private lateinit var tileTrailing: ImageView
+    private lateinit var autoOff: Switch
+    private lateinit var autoOffStatus: TextView
 
     // Keeps the screen in sync when the tile or notification changes the state.
     private val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, _ -> render() }
@@ -54,6 +58,8 @@ class SettingsActivity : Activity() {
         batteryTrailing = findViewById(R.id.battery_trailing)
         tileStatus = findViewById(R.id.tile_status)
         tileTrailing = findViewById(R.id.tile_trailing)
+        autoOff = findViewById(R.id.auto_off)
+        autoOffStatus = findViewById(R.id.auto_off_status)
 
         // Edge-to-edge is enforced on recent SDKs; keep content clear of the system bars.
         val scroll = findViewById<View>(R.id.scroll)
@@ -110,6 +116,13 @@ class SettingsActivity : Activity() {
             }
         })
 
+        autoOff.setOnCheckedChangeListener { button, checked ->
+            if (!button.isPressed) return@setOnCheckedChangeListener
+            prefs.autoOff = checked
+        }
+        // Tapping the row picks the time; choosing one also turns auto-off on.
+        findViewById<View>(R.id.auto_off_row).setOnClickListener { pickAutoOffTime() }
+
         findViewById<View>(R.id.overlay_row).setOnClickListener { openOverlaySettings() }
         findViewById<View>(R.id.battery_row).setOnClickListener { openBatterySettings() }
         findViewById<View>(R.id.tile_row).setOnClickListener { requestTile() }
@@ -138,6 +151,13 @@ class SettingsActivity : Activity() {
         }
         if (level.progress != prefs.level) level.progress = prefs.level
         levelLabel.text = getString(R.string.dim_level_value, prefs.level)
+
+        autoOff.isChecked = prefs.autoOff
+        autoOffStatus.text = if (prefs.autoOff) {
+            getString(R.string.auto_off_at, AutoOff.format(this, prefs.autoOffMinute))
+        } else {
+            getString(R.string.auto_off_none)
+        }
 
         overlayStatus.setText(if (canDraw) R.string.overlay_granted else R.string.overlay_needed)
         showDone(overlayTrailing, canDraw)
@@ -172,6 +192,20 @@ class SettingsActivity : Activity() {
             requestPermissions(arrayOf(Manifest.permission.POST_NOTIFICATIONS), 0)
         }
         Dimmer.turnOn(this)
+    }
+
+    private fun pickAutoOffTime() {
+        val minute = prefs.autoOffMinute
+        TimePickerDialog(
+            this,
+            { _, hour, min ->
+                prefs.autoOffMinute = hour * 60 + min
+                prefs.autoOff = true
+            },
+            minute / 60,
+            minute % 60,
+            DateFormat.is24HourFormat(this),
+        ).show()
     }
 
     private fun openOverlaySettings() {

@@ -7,6 +7,7 @@ Dims the screen below the system minimum with a black overlay. Sideloaded; no ad
 - **Quick Settings tile** "Dimmer": tap to toggle, long-press for settings.
 - **Notification** (low priority, persistent while on): Dimmer −, Dimmer +, Off. Steps are 10%.
 - **Settings**: Dimmer switch and dim-level slider with live preview, then a setup checklist: overlay permission, battery optimization, and adding the Quick Settings tile (one tap on Android 13+). Light and dark themes.
+- **Turn off automatically** (optional): pick a time, and the dimmer switches itself off then, so the screen isn't too dark to use in the morning. It uses an exact alarm so it fires on time while the phone sleeps. The notification shows the time.
 - Level and on/off state persist in SharedPreferences. If the system kills and restarts the service, it comes back at the saved level.
 
 ## Icons

@@ -26,7 +26,13 @@ class DimmerService : Service() {
 
     // Held as a field: SharedPreferences keeps listeners weakly.
     private val listener = SharedPreferences.OnSharedPreferenceChangeListener { _, key ->
-        if (key == DimPrefs.KEY_LEVEL) applyLevel()
+        when (key) {
+            DimPrefs.KEY_LEVEL -> applyLevel()
+            DimPrefs.KEY_AUTO_OFF, DimPrefs.KEY_AUTO_OFF_MINUTE -> {
+                AutoOff.sync(this)
+                updateNotification()
+            }
+        }
     }
 
     override fun onCreate() {
@@ -56,12 +62,14 @@ class DimmerService : Service() {
             return START_NOT_STICKY
         }
         showOverlay()
+        AutoOff.sync(this)
         Dimmer.refreshTile(this)
         return START_STICKY
     }
 
     override fun onDestroy() {
         prefs.prefs.unregisterOnSharedPreferenceChangeListener(listener)
+        AutoOff.cancel(this)
         overlay?.let { runCatching { windowManager.removeView(it) } }
         overlay = null
         super.onDestroy()
@@ -113,6 +121,10 @@ class DimmerService : Service() {
         val p = params ?: return
         p.alpha = DimLevel.toAlpha(prefs.level, prefs.maxLevel)
         runCatching { windowManager.updateViewLayout(view, p) }
+        updateNotification()
+    }
+
+    private fun updateNotification() {
         getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, buildNotification())
     }
 
@@ -155,7 +167,13 @@ class DimmerService : Service() {
         return Notification.Builder(this, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_dusk)
             .setContentTitle(getString(R.string.notif_title, prefs.level))
-            .setContentText(getString(R.string.notif_text))
+            .setContentText(
+                if (prefs.autoOff) {
+                    getString(R.string.notif_text_auto_off, AutoOff.format(this, prefs.autoOffMinute))
+                } else {
+                    getString(R.string.notif_text)
+                },
+            )
             .setColor(getColor(R.color.dusk_accent))
             .setContentIntent(open)
             .setOngoing(true)

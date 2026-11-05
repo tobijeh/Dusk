@@ -145,7 +145,42 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="16dp" />
+                    android:layout_height="8dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider" />
+
+                <LinearLayout
+                    android:id="@+id/auto_off_row"
+                    style="@style/Dusk.Row"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:paddingBottom="16dp">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_timer" />
+
+                    <LinearLayout style="@style/Dusk.RowText">
+
+                        <TextView
+                            style="@style/Dusk.Title"
+                            android:text="@string/auto_off_title" />
+
+                        <TextView
+                            android:id="@+id/auto_off_status"
+                            style="@style/Dusk.Subtitle" />
+                    </LinearLayout>
+
+                    <Switch
+                        android:id="@+id/auto_off"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:contentDescription="@string/auto_off_title"
+                        android:minHeight="48dp" />
+                </LinearLayout>
             </LinearLayout>
 
             <!-- Setup card -->
