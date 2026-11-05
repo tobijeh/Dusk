@@ -16,6 +16,7 @@ object Dimmer {
      */
     fun turnOn(context: Context): Boolean {
         DimPrefs(context).enabled = true
+        AutoOff.arm(context)
         return try {
             context.startForegroundService(Intent(context, DimmerService::class.java))
             true
@@ -29,6 +30,7 @@ object Dimmer {
 
     fun turnOff(context: Context) {
         DimPrefs(context).enabled = false
+        AutoOff.disarm(context)
         context.stopService(Intent(context, DimmerService::class.java))
         refreshTile(context)
     }

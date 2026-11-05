@@ -32,4 +32,11 @@ class AutoOffTest {
         // US clocks fall back on 2026-11-01: still 7:00 local time, 25 hours later.
         assertEquals(at("2026-11-01T07:00"), next("2026-10-31T22:00", 7 * 60))
     }
+
+    @Test fun dueOnlyOnceTheOffTimeIsReached() {
+        assertEquals(false, AutoOff.isDue(0, 1_000))
+        assertEquals(false, AutoOff.isDue(2_000, 1_999))
+        assertEquals(true, AutoOff.isDue(2_000, 2_000))
+        assertEquals(true, AutoOff.isDue(2_000, 9_000))
+    }
 }

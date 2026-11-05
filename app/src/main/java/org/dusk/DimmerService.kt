@@ -5,6 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.app.Service
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.IntentFilter
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.ServiceInfo
@@ -29,9 +32,17 @@ class DimmerService : Service() {
         when (key) {
             DimPrefs.KEY_LEVEL -> applyLevel()
             DimPrefs.KEY_AUTO_OFF, DimPrefs.KEY_AUTO_OFF_MINUTE -> {
-                AutoOff.sync(this)
+                AutoOff.arm(this)
                 updateNotification()
             }
+        }
+    }
+
+    // Checks the auto-off time once a minute while the screen is on, and as soon as it turns on.
+    // This doesn't depend on alarms, which some phones delay.
+    private val clock = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            AutoOff.turnOffIfDue(this@DimmerService)
         }
     }
 
@@ -41,6 +52,18 @@ class DimmerService : Service() {
         windowManager = getSystemService(WindowManager::class.java)
         createChannel()
         prefs.prefs.registerOnSharedPreferenceChangeListener(listener)
+        val filter = IntentFilter().apply {
+            addAction(Intent.ACTION_TIME_TICK)
+            addAction(Intent.ACTION_SCREEN_ON)
+            addAction(Intent.ACTION_USER_PRESENT)
+            addAction(Intent.ACTION_TIME_CHANGED)
+            addAction(Intent.ACTION_TIMEZONE_CHANGED)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(clock, filter, Context.RECEIVER_NOT_EXPORTED)
+        } else {
+            registerReceiver(clock, filter)
+        }
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -61,15 +84,17 @@ class DimmerService : Service() {
             stopSelf()
             return START_NOT_STICKY
         }
+        // The off time may have passed while the service was not running.
+        if (AutoOff.turnOffIfDue(this)) return START_NOT_STICKY
+        AutoOff.restore(this)
         showOverlay()
-        AutoOff.sync(this)
         Dimmer.refreshTile(this)
         return START_STICKY
     }
 
     override fun onDestroy() {
         prefs.prefs.unregisterOnSharedPreferenceChangeListener(listener)
-        AutoOff.cancel(this)
+        unregisterReceiver(clock)
         overlay?.let { runCatching { windowManager.removeView(it) } }
         overlay = null
         super.onDestroy()

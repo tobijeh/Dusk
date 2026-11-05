@@ -13,6 +13,8 @@
     <string name="auto_off_title">Turn off automatically</string>
     <string name="auto_off_at">At %1$s, so mornings aren\'t too dark</string>
     <string name="auto_off_none">Off · tap to choose a time</string>
+    <string name="alarm_title">Alarms &amp; reminders</string>
+    <string name="alarm_needed">Allow, so auto-off is on time with the screen off</string>
     <string name="section_setup">Setup</string>
     <string name="overlay_title">Display over other apps</string>
     <string name="overlay_granted">Allowed</string>

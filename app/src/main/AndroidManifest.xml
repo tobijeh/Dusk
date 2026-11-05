@@ -6,11 +6,10 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <!-- Auto-off must fire on time. Android 13+ grants USE_EXACT_ALARM at install; 12 uses the older one. -->
+    <!-- Auto-off must fire on time. Android 13+ grants USE_EXACT_ALARM at install. SCHEDULE_EXACT_ALARM
+         covers Android 12, and lets the user allow alarms in settings if a phone withholds the other. -->
     <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
-    <uses-permission
-        android:name="android.permission.SCHEDULE_EXACT_ALARM"
-        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"

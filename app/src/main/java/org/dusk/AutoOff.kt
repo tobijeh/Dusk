@@ -14,8 +14,13 @@ import java.util.Date
 
 /**
  * Turns the dimmer off at a set time of day, so the screen isn't left too dark to use in the
- * morning. [DimmerService] owns the alarm: it schedules it while the dimmer is on and cancels it
- * when the dimmer goes off.
+ * morning.
+ *
+ * Arming stores the off time (`autoOffAt`). Two things act on it, because phone makers (ColorOS
+ * among them) may delay or drop an app's alarms:
+ * - an exact alarm, for when the screen is off;
+ * - [DimmerService], which checks the clock every minute while the screen is on and whenever it
+ *   turns on or unlocks.
  */
 object AutoOff {
 
@@ -28,15 +33,45 @@ object AutoOff {
         return next.toInstant().toEpochMilli()
     }
 
-    /** Schedules the alarm when the dimmer is on and auto-off is set; cancels it otherwise. */
-    fun sync(context: Context) {
+    /** Whether an off time stored as [offAt] (0 = none) has been reached at [nowMillis]. */
+    fun isDue(offAt: Long, nowMillis: Long): Boolean = offAt > 0 && nowMillis >= offAt
+
+    /** Sets the off time from the settings (when the dimmer turns on, or the settings change). */
+    fun arm(context: Context) {
         val prefs = DimPrefs(context)
-        if (prefs.enabled && prefs.autoOff) schedule(context, prefs.autoOffMinute) else cancel(context)
+        if (!prefs.autoOff) {
+            disarm(context)
+            return
+        }
+        val at = nextTriggerMillis(System.currentTimeMillis(), prefs.autoOffMinute, ZoneId.systemDefault())
+        prefs.autoOffAt = at
+        setAlarm(context, at)
     }
 
-    fun cancel(context: Context) {
+    /** Clears the off time (when the dimmer turns off). */
+    fun disarm(context: Context) {
+        DimPrefs(context).autoOffAt = 0
         context.getSystemService(AlarmManager::class.java).cancel(pendingIntent(context))
     }
+
+    /** Puts the alarm back for a stored off time, after the service was restarted. */
+    fun restore(context: Context) {
+        val at = DimPrefs(context).autoOffAt
+        if (at > 0) setAlarm(context, at)
+    }
+
+    /** Turns the dimmer off if its off time has been reached. Returns true if it did. */
+    fun turnOffIfDue(context: Context): Boolean {
+        val prefs = DimPrefs(context)
+        if (!prefs.enabled || !isDue(prefs.autoOffAt, System.currentTimeMillis())) return false
+        Dimmer.turnOff(context)
+        return true
+    }
+
+    /** False when Android won't let Dusk set exact alarms, so the off time may run late with the screen off. */
+    fun canBeExact(context: Context): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            context.getSystemService(AlarmManager::class.java).canScheduleExactAlarms()
 
     /** The set time in the phone's 12- or 24-hour format, like "7:00 AM". */
     fun format(context: Context, minuteOfDay: Int): String {
@@ -46,11 +81,10 @@ object AutoOff {
         return DateFormat.getTimeFormat(context).format(Date(millis))
     }
 
-    private fun schedule(context: Context, minuteOfDay: Int) {
+    private fun setAlarm(context: Context, at: Long) {
         val alarms = context.getSystemService(AlarmManager::class.java)
-        val at = nextTriggerMillis(System.currentTimeMillis(), minuteOfDay, ZoneId.systemDefault())
         // Exact, and allowed in Doze: an inexact alarm can fire long after the user wakes up.
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || alarms.canScheduleExactAlarms()) {
+        if (canBeExact(context)) {
             alarms.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pendingIntent(context))
         } else {
             alarms.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pendingIntent(context))

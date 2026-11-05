@@ -42,8 +42,14 @@ class DimPrefs(context: Context) {
         get() = prefs.getInt(KEY_AUTO_OFF_MINUTE, DEFAULT_AUTO_OFF_MINUTE).coerceIn(0, 24 * 60 - 1)
         set(value) = prefs.edit().putInt(KEY_AUTO_OFF_MINUTE, value.coerceIn(0, 24 * 60 - 1)).apply()
 
+    /** When the dimmer will turn itself off, in epoch millis; 0 when it won't. Set by [AutoOff]. */
+    var autoOffAt: Long
+        get() = prefs.getLong(KEY_AUTO_OFF_AT, 0)
+        set(value) = prefs.edit().putLong(KEY_AUTO_OFF_AT, value).apply()
+
     companion object {
         const val KEY_ENABLED = "enabled"
+        const val KEY_AUTO_OFF_AT = "auto_off_at"
         const val KEY_AUTO_OFF = "auto_off"
         const val KEY_AUTO_OFF_MINUTE = "auto_off_minute"
         const val DEFAULT_AUTO_OFF_MINUTE = 7 * 60

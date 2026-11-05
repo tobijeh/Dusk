@@ -282,6 +282,40 @@
                         style="@style/Dusk.Trailing"
                         android:contentDescription="@null" />
                 </LinearLayout>
+
+                <View
+                    android:id="@+id/alarm_divider"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@drawable/divider"
+                    android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/alarm_row"
+                    style="@style/Dusk.Row"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:visibility="gone">
+
+                    <ImageView
+                        style="@style/Dusk.Chip"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_timer" />
+
+                    <LinearLayout style="@style/Dusk.RowText">
+
+                        <TextView
+                            style="@style/Dusk.Title"
+                            android:text="@string/alarm_title" />
+
+                        <TextView
+                            style="@style/Dusk.Subtitle"
+                            android:text="@string/alarm_needed" />
+                    </LinearLayout>
+
+                    <ImageView
+                        style="@style/Dusk.Trailing"
+                        android:contentDescription="@null" />
+                </LinearLayout>
             </LinearLayout>
 
             <TextView

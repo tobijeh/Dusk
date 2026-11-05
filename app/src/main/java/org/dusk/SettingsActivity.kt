@@ -126,11 +126,14 @@ class SettingsActivity : Activity() {
         findViewById<View>(R.id.overlay_row).setOnClickListener { openOverlaySettings() }
         findViewById<View>(R.id.battery_row).setOnClickListener { openBatterySettings() }
         findViewById<View>(R.id.tile_row).setOnClickListener { requestTile() }
+        findViewById<View>(R.id.alarm_row).setOnClickListener { openAlarmSettings() }
     }
 
     override fun onResume() {
         super.onResume()
         prefs.prefs.registerOnSharedPreferenceChangeListener(listener)
+        // Alarm permission may have just been granted: set the alarm again so it's exact.
+        if (prefs.enabled) AutoOff.restore(this)
         render()
     }
 
@@ -158,6 +161,10 @@ class SettingsActivity : Activity() {
         } else {
             getString(R.string.auto_off_none)
         }
+        // Only shown when auto-off is on and the phone withholds exact alarms.
+        val needsAlarms = prefs.autoOff && !AutoOff.canBeExact(this)
+        findViewById<View>(R.id.alarm_row).visibility = if (needsAlarms) View.VISIBLE else View.GONE
+        findViewById<View>(R.id.alarm_divider).visibility = if (needsAlarms) View.VISIBLE else View.GONE
 
         overlayStatus.setText(if (canDraw) R.string.overlay_granted else R.string.overlay_needed)
         showDone(overlayTrailing, canDraw)
@@ -206,6 +213,15 @@ class SettingsActivity : Activity() {
             minute % 60,
             DateFormat.is24HourFormat(this),
         ).show()
+    }
+
+    private fun openAlarmSettings() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
+        try {
+            startActivity(Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM, Uri.parse("package:$packageName")))
+        } catch (_: ActivityNotFoundException) {
+            openBatterySettings()
+        }
     }
 
     private fun openOverlaySettings() {
